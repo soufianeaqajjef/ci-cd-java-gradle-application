@@ -4,29 +4,29 @@ pipeline{
         VERSION = "${env.BUILD_ID}"
     }
     stages{
-        stage("sonar quality check"){
-            agent {
-                docker {
-                    image 'openjdk:11'
-                }
-            }
-            steps{
-                script{
-                    withSonarQubeEnv(credentialsId: 'sonar-token') {
-                            sh 'chmod +x gradlew'
-                            sh './gradlew sonarqube'
-                    }
+        //stage("sonar quality check"){
+            //agent {
+             //   docker {
+            //        image 'openjdk:11'
+            //    }
+           // }
+            //steps{
+            //    script{
+            //        withSonarQubeEnv(credentialsId: 'sonar-token') {
+            //                sh 'chmod +x gradlew'
+            //                sh './gradlew sonarqube --stacktrace'
+            //        }
 
-                    timeout(time: 1, unit: 'HOURS') {
-                      def qg = waitForQualityGate()
-                      if (qg.status != 'OK') {
-                           error "Pipeline aborted due to quality gate failure: ${qg.status}"
-                      }
-                    }
+            //        timeout(time: 1, unit: 'HOURS') {
+            //          def qg = waitForQualityGate()
+            //          if (qg.status != 'OK') {
+            //               error "Pipeline aborted due to quality gate failure: ${qg.status}"
+            //          }
+            //        }
 
-                }  
-            }
-        }
+            //    }
+            //}
+       // }
         stage("docker build & docker push"){
             steps{
                 script{
@@ -46,7 +46,7 @@ pipeline{
                 script{
 
                     dir('kubernetes/') {
-                        withEnv(['DATREE_TOKEN=ixXYuS4KCVxRZMb1EZcRGw']) {
+                        withEnv(['DATREE_TOKEN=poH1UGtU8di6XsakJZa8Eb']) {
                               sh 'helm datree test myapp/'
                         }
                     }
@@ -73,7 +73,7 @@ pipeline{
             steps{
                 script{
                     timeout(10) {
-                        mail bcc: '', body: "<br>Project: ${env.JOB_NAME} <br>Build Number: ${env.BUILD_NUMBER} <br> Go to build url and approve the deployment request <br> URL de build: ${env.BUILD_URL}", cc: '', charset: 'UTF-8', from: '', mimeType: 'text/html', replyTo: '', subject: "${currentBuild.result} CI: Project name -> ${env.JOB_NAME}", to: "deekshith.snsep@gmail.com";  
+                        mail bcc: '', body: "<br>Project: ${env.JOB_NAME} <br>Build Number: ${env.BUILD_NUMBER} <br> Go to build url and approve the deployment request <br> URL de build: ${env.BUILD_URL}", cc: '', charset: 'UTF-8', from: '', mimeType: 'text/html', replyTo: '', subject: "${currentBuild.result} CI: Project name -> ${env.JOB_NAME}", to: "s.aqajjef@gmail.com";
                         input(id: "Deploy Gate", message: "Deploy ${params.project_name}?", ok: 'Deploy')
                     }
                 }
@@ -106,7 +106,7 @@ pipeline{
 
     post {
 		always {
-			mail bcc: '', body: "<br>Project: ${env.JOB_NAME} <br>Build Number: ${env.BUILD_NUMBER} <br> URL de build: ${env.BUILD_URL}", cc: '', charset: 'UTF-8', from: '', mimeType: 'text/html', replyTo: '', subject: "${currentBuild.result} CI: Project name -> ${env.JOB_NAME}", to: "deekshith.snsep@gmail.com";  
+			mail bcc: '', body: "<br>Project: ${env.JOB_NAME} <br>Build Number: ${env.BUILD_NUMBER} <br> URL de build: ${env.BUILD_URL}", cc: '', charset: 'UTF-8', from: '', mimeType: 'text/html', replyTo: '', subject: "${currentBuild.result} CI: Project name -> ${env.JOB_NAME}", to: "s.aqajjef@gmail.com";
 		 }
 	   }
 }
