@@ -4,7 +4,7 @@ on:
   push:
     branches: [ main ]
     
-env:
+#env:
   #DATREE_TOKEN: ${{ secrets.DATREE_TOKEN }} 
   #KUBECONFIG: /home/alerts_deekshith/kubeconfig/config_now 
   
