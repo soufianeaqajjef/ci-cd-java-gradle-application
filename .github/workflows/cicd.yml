@@ -6,7 +6,7 @@ on:
     
 env:
   DATREE_TOKEN: ${{ secrets.DATREE_TOKEN }} 
-  #KUBECONFIG: /home/alerts_deekshith/kubeconfig/config_now 
+  KUBECONFIG: /home/n_aqajjef/kubeconfig/kconfig 
   
 jobs:
   build:
@@ -25,11 +25,11 @@ jobs:
       run: chmod +x gradlew
     - name: Build with Gradle
       run: ./gradlew build
-    - name: SonarQube Scan
-      uses: sonarsource/sonarqube-scan-action@master
-      env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+    #- name: SonarQube Scan
+    #  uses: sonarsource/sonarqube-scan-action@master
+    #  env:
+    #    SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    #    SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
     #- name: SonarQube Quality Gate check
     #  uses: sonarsource/sonarqube-quality-gate-action@master
       # Force to fail step after specific time
@@ -52,9 +52,6 @@ jobs:
         docker build -t 34.125.11.250:8083/javaapp:${{ github.run_number }} .
         docker push 34.125.11.250:8083/javaapp:${{ github.run_number }}
         docker rmi 34.125.11.250:8083/javaapp:${{ github.run_number }}
-    - name: Set Kubernetes Contex
-      run: |
-        export KUBECONFIG=${{ secrets.KUBE_CONFIG }}
     - name: deploying manifest file on k8s cluster  
       run: | 
         sed -i "s;imagename:1.0;34.125.31.157:8083/javaapp:${{ github.run_number }};g" kube.yaml
