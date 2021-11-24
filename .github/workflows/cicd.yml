@@ -52,12 +52,12 @@ jobs:
         docker build -t 34.125.11.250:8083/javaapp:${{ github.run_number }} .
         docker push 34.125.11.250:8083/javaapp:${{ github.run_number }}
         docker rmi 34.125.11.250:8083/javaapp:${{ github.run_number }}
-    
-    - name: deploying manifest file on k8s cluster
+    - name: Set Kubernetes Contex
       uses: azure/k8s-set-context@v1
       with:
         method: kubeconfig
         kubeconfig: ${{ secrets.KUBE_CONFIG }} # Use secret (https://developer.github.com/actions/managing-workflows/storing-secrets/)
+    - name: deploying manifest file on k8s cluster  
       run: | 
         sed -i "s;imagename:1.0;34.125.31.157:8083/javaapp:${{ github.run_number }};g" kube.yaml
         kubectl apply -f kube.yaml
