@@ -61,4 +61,19 @@ jobs:
     - name: verification 
       run: |
         sleep 60
-        kubectl run curl --image=curlimages/curl -i --rm --restart=Never -- curl myapp:8080                 
+        kubectl run curl --image=curlimages/curl -i --rm --restart=Never -- curl myapp:8080
+    - name: Send email
+      if: always()
+      uses: dawidd6/action-send-mail@v2
+      with:
+        server_address: smtp.gmail.com
+        server_port: 465
+        username: ${{ secrets.EMAIL_USERNAME }}
+        password: ${{ secrets.EMAIL_PASSWORD }}
+        subject: ${{ github.job }} job of ${{ github.repository }} has ${{ job.status }}
+        # email body as text
+        body: ${{ github.job }} job in worflow ${{ github.workflow }} of ${{ github.repository }} has ${{ job.status }}
+        # comma-separated string, send email to
+        to: saqajjef@gmail.com
+        # from email name
+        from: saqajjef@gmail.com                         
