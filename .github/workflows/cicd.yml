@@ -57,4 +57,8 @@ jobs:
         sed -i "s;imagename:1.0;34.125.182.186:8083/javaapp:${{ github.run_number }};g" kube.yaml
         kubectl apply -f kube.yaml
         sleep 30
-        kubectl get po         
+        kubectl get po
+    - name: verification 
+      run: |
+        sleep 60
+        kubectl run curl --image=curlimages/curl -i --rm --restart=Never -- curl myapp:8080                 
