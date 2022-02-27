@@ -31,16 +31,16 @@ pipeline{
                 script{
                     withCredentials([string(credentialsId: 'docker_pass', variable: 'docker_password')]) {
                              sh '''
-                                docker build -t 34.125.11.250:8083/springapp:${VERSION} .
+                                docker build -t 35.187.14.153:8083/springapp:${VERSION} .
                                 docker login -u admin -p $docker_password 34.125.11.250:8083
-                                docker push  34.125.11.250:8083/springapp:${VERSION}
-                                docker rmi 34.125.11.250:8083/springapp:${VERSION}
+                                docker push  35.187.14.153:8083/springapp:${VERSION}
+                                docker rmi 35.187.14.153:8083/springapp:${VERSION}
                             '''
                     }
                 }
             }
         }
-        stage('indentifying misconfigs using datree in helm charts'){
+        /*stage('indentifying misconfigs using datree in helm charts'){
             steps{
                 script{
 
@@ -100,12 +100,12 @@ pipeline{
                      }
                 }
             }
-        }
+        }*/
     }
 
     post {
-		always {
+		/*always {
 			mail bcc: '', body: "<br>Project: ${env.JOB_NAME} <br>Build Number: ${env.BUILD_NUMBER} <br> URL de build: ${env.BUILD_URL}", cc: '', charset: 'UTF-8', from: '', mimeType: 'text/html', replyTo: '', subject: "${currentBuild.result} CI: Project name -> ${env.JOB_NAME}", to: "s.aqajjef@gmail.com";
-		 }
+		 }*/
 	   }
 }
