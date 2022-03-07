@@ -17,12 +17,12 @@ pipeline{
                             sh './gradlew sonarqube --debug'
                     }
 
-                    timeout(time: 1, unit: 'HOURS') {
+                    /*timeout(time: 1, unit: 'HOURS') {
                       def qg = waitForQualityGate()
                       if (qg.status != 'OK') {
                            error "Pipeline aborted due to quality gate failure: ${qg.status}"
                       }
-                    }
+                    }*/
                 }
             }
         }
@@ -40,7 +40,7 @@ pipeline{
                 }
             }
         }
-        /*stage('indentifying misconfigs using datree in helm charts'){
+        stage('indentifying misconfigs using datree in helm charts'){
             steps{
                 script{
 
@@ -60,7 +60,7 @@ pipeline{
                              sh '''
                                  helmversion=$( helm show chart myapp | grep version | cut -d: -f 2 | tr -d ' ')
                                  tar -czvf  myapp-${helmversion}.tgz myapp/
-                                 curl -u admin:$docker_password http://34.125.11.250:8081/repository/helm-hosted/ --upload-file myapp-${helmversion}.tgz -v
+                                 curl -u admin:$docker_password http://35.187.14.153:8081/repository/helm-hosted/ --upload-file myapp-${helmversion}.tgz -v
                             '''
                           }
                     }
@@ -79,7 +79,7 @@ pipeline{
             }
         }
 
-        stage('Deploying application on k8s cluster') {
+        /*stage('Deploying application on k8s cluster') {
             steps {
                script{
                    withCredentials([kubeconfigFile(credentialsId: 'kubernetes-config', variable: 'KUBECONFIG')]) {
