@@ -2,6 +2,7 @@ pipeline{
     agent any 
     environment{
         VERSION = "${env.BUILD_ID}"
+        SERVERIP = "35.187.14.153"
     }
     stages{
         stage("sonar quality check"){
@@ -31,10 +32,10 @@ pipeline{
                 script{
                     withCredentials([string(credentialsId: 'docker_pass', variable: 'docker_password')]) {
                              sh '''
-                                docker build -t 35.187.14.153:8083/springapp:${VERSION} .
-                                docker login -u admin -p $docker_password 35.187.14.153:8083
-                                docker push  35.187.14.153:8083/springapp:${VERSION}
-                                docker rmi 35.187.14.153:8083/springapp:${VERSION}
+                                docker build -t ${SERVERIP}:8083/springapp:${VERSION} .
+                                docker login -u admin -p $docker_password ${SERVERIP}:8083
+                                docker push  ${SERVERIP}:8083/springapp:${VERSION}
+                                docker rmi ${SERVERIP}:8083/springapp:${VERSION}
                             '''
                     }
                 }
@@ -60,7 +61,7 @@ pipeline{
                              sh '''
                                  helmversion=$( helm show chart myapp | grep version | cut -d: -f 2 | tr -d ' ')
                                  tar -czvf  myapp-${helmversion}.tgz myapp/
-                                 curl -u admin:$docker_password http://35.187.14.153:8081/repository/helm-hosted/ --upload-file myapp-${helmversion}.tgz -v
+                                 curl -u admin:$docker_password http://${SERVERIP}:8081/repository/helm-hosted/ --upload-file myapp-${helmversion}.tgz -v
                             '''
                           }
                     }
@@ -84,7 +85,7 @@ pipeline{
                script{
                    withCredentials([kubeconfigFile(credentialsId: 'kubernetes-config', variable: 'KUBECONFIG')]) {
                         dir('kubernetes/') {
-                          sh 'helm upgrade --install --set image.repository="35.187.14.153:8083/springapp" --set image.tag="${VERSION}" myjavaapp myapp/'
+                          sh 'helm upgrade --install --set image.repository="${SERVERIP}:8083/springapp" --set image.tag="${VERSION}" myjavaapp myapp/'
                         }
                     }
                }
